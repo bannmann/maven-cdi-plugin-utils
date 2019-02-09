@@ -20,6 +20,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.PluginParameterExpressionEvaluator;
 import org.apache.maven.plugin.logging.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
@@ -38,17 +40,17 @@ import com.itemis.maven.plugins.cdi.annotations.RollbackOnError;
  * @since 2.0.0
  */
 public class WorkflowExecutor {
-  private Log log;
+  private static final Logger log = LoggerFactory.getLogger(WorkflowExecutor.class);
+
   private ProcessingWorkflow workflow;
   private Map<String, CDIMojoProcessingStep> processingSteps;
   private Stack<Pair<CDIMojoProcessingStep, ExecutionContext>> executedSteps;
   private PluginParameterExpressionEvaluator expressionEvaluator;
 
-  public WorkflowExecutor(ProcessingWorkflow workflow, Map<String, CDIMojoProcessingStep> processingSteps, Log log,
+  public WorkflowExecutor(ProcessingWorkflow workflow, Map<String, CDIMojoProcessingStep> processingSteps,
       PluginParameterExpressionEvaluator expressionEvaluator) {
     this.workflow = workflow;
     this.processingSteps = processingSteps;
-    this.log = log;
     this.expressionEvaluator = expressionEvaluator;
   }
 
@@ -111,7 +113,7 @@ public class WorkflowExecutor {
    * @throws MojoFailureException if any of the processing steps of the workflow throw such an exception.
    */
   public void execute() throws MojoExecutionException, MojoFailureException {
-    this.log.info("Executing the standard workflow of the goal");
+    log.info("Executing the standard workflow of the goal");
     this.executedSteps = new Stack<Pair<CDIMojoProcessingStep, ExecutionContext>>();
 
     try {
@@ -133,7 +135,7 @@ public class WorkflowExecutor {
 
   private void executeFinallySteps() throws MojoExecutionException, MojoFailureException {
     if (!this.workflow.getFinallySteps().isEmpty()) {
-      this.log.info("Executing the finally workflow of the goal");
+      log.info("Executing the finally workflow of the goal");
       this.executedSteps.clear();
 
       for (SimpleWorkflowStep step : this.workflow.getFinallySteps()) {
@@ -156,8 +158,8 @@ public class WorkflowExecutor {
       executionContext.expandProjectVariables(this.expressionEvaluator);
       step.execute(executionContext);
     } catch (Throwable t) {
-      this.log.error("An exception was caught while processing the workflow step with id '"
-          + simpleWorkflowStep.getCompositeStepId() + "'.", t);
+      log.error("An exception was caught while processing the workflow step with id '{}'.",
+          simpleWorkflowStep.getCompositeStepId(), t);
       rollback(t);
 
       // throw original exception after rollback!
@@ -196,8 +198,8 @@ public class WorkflowExecutor {
             executionContext.expandProjectVariables(WorkflowExecutor.this.expressionEvaluator);
             step.execute(executionContext);
           } catch (Throwable t) {
-            WorkflowExecutor.this.log.error("An exception was caught while processing the workflow step with id '"
-                + simpleWorkflowStep.getCompositeStepId() + "'.", t);
+            log.error("An exception was caught while processing the workflow step with id '{}'.",
+                simpleWorkflowStep.getCompositeStepId(), t);
             thrownExceptions.add(t);
           }
         }
@@ -232,7 +234,7 @@ public class WorkflowExecutor {
   }
 
   private void rollback(Throwable t) {
-    this.log.info("Rolling back after execution errors - please find the error messages and stack traces above.");
+    log.info("Rolling back after execution errors - please find the error messages and stack traces above.");
     while (!this.executedSteps.empty()) {
       Pair<CDIMojoProcessingStep, ExecutionContext> pair = this.executedSteps.pop();
       rollback(pair.getLeft(), pair.getRight(), t);
@@ -274,8 +276,8 @@ public class WorkflowExecutor {
             break;
         }
       } catch (ReflectiveOperationException e) {
-        this.log.error("An exception was caught while rolling back the workflow step with id '"
-            + executionContext.getCompositeStepId() + "'. Proceeding with the rollback of the next steps.", e);
+        log.error("An exception was caught while rolling back the workflow step with id '{}'. Proceeding with the rollback of the next steps.",
+            executionContext.getCompositeStepId(), e);
       }
     }
   }
@@ -323,7 +325,7 @@ public class WorkflowExecutor {
               }
               break;
             default:
-              this.log.warn(
+              log.warn(
                   "Found rollback method with more than two parameters! Only zero, one or two parameters of type <T extends Throwable> and ExecutionContext are allowed!");
               break;
           }
