@@ -7,13 +7,13 @@
     <version>1</version>
   </parent>
 
-  <groupId>com.itemis.maven.plugins</groupId>
+  <groupId>com.github.bannmann.maven.cdi</groupId>
   <artifactId>cdi-plugin-utils</artifactId>
-  <version>3.4.1-SNAPSHOT</version>
+  <version>3.4.0-SNAPSHOT</version>
 
   <name>CDI Plugin Utilities</name>
-  <description>Provides an abstract Mojo that enables CDI-based dependency injection for Maven Plugins.</description>
-  <url>https://github.com/shillner/maven-cdi-plugin-utils</url>
+  <description>Provides an abstract Mojo that enables CDI-based dependency injection for Maven Plugins. Forked from https://github.com/shillner/maven-cdi-plugin-utils</description>
+  <url>https://github.com/bannmann/maven-cdi-plugin-utils</url>
   <inceptionYear>2016</inceptionYear>
 
   <developers>
@@ -24,18 +24,17 @@
       <organizationUrl>https://itemis.com/</organizationUrl>
       <timezone>1</timezone>
     </developer>
+    <developer>
+      <id>bannmann</id>
+      <name>Jens Bannmann</name>
+    </developer>
   </developers>
 
   <scm>
-    <connection>scm:git:https://github.com/shillner/maven-cdi-plugin-utils.git</connection>
-    <url>https://github.com/shillner/maven-cdi-plugin-utils</url>
+    <connection>scm:git:https://github.com/bannmann/maven-cdi-plugin-utils.git</connection>
+    <url>https://github.com/bannmann/maven-cdi-plugin-utils</url>
     <tag>HEAD</tag>
   </scm>
-
-  <issueManagement>
-    <system>GitHub</system>
-    <url>https://github.com/shillner/maven-cdi-plugin-utils/issues</url>
-  </issueManagement>
 
   <prerequisites>
     <maven>3.2.1</maven>
