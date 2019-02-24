@@ -45,7 +45,7 @@
     <version.aether>1.0.2.v20150114</version.aether>
     <version.asciitable>0.2.5</version.asciitable>
     <version.cdi-api>1.2</version.cdi-api>
-    <version.guava>19.0</version.guava>
+    <version.guava>27.0-jre</version.guava>
     <version.java>1.7</version.java>
     <version.javax.inject>1</version.javax.inject>
     <version.junit>4.12</version.junit>
