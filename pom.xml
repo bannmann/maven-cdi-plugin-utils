@@ -9,7 +9,7 @@
 
   <groupId>com.github.bannmann.maven.cdi</groupId>
   <artifactId>cdi-plugin-utils</artifactId>
-  <version>3.4.0_p1</version>
+  <version>3.4.0_p2</version>
 
   <name>CDI Plugin Utilities</name>
   <description>Provides an abstract Mojo that enables CDI-based dependency injection for Maven Plugins. Forked from https://github.com/shillner/maven-cdi-plugin-utils</description>
